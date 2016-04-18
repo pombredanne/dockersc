@@ -1,6 +1,6 @@
 # dockersc
 
-A proof of concept Dockerfile birthcert. Uses [[https://www.npmjs.com/package/dockerfile-parse | dockerfile-parse]] and [[https://www.npmjs.com/package/validate-dockerfile | validate-dockerfile]]. 
+A proof of concept Dockerfile birthcert. Uses [dockerfile-parse](https://www.npmjs.com/package/dockerfile-parse) and [validate-dockerfile](https://www.npmjs.com/package/validate-dockerfile). 
 
 <pre>
 $ node docker-birthcert.js Dockerfile
