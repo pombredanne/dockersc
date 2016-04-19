@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 var fs = require('fs')
 var parse = require('dockerfile-parse')
 var util = require('util')
@@ -8,7 +6,7 @@ var validateDockerfile = require('validate-dockerfile')
 var SHELLMETA = '[<>&|;()`#]'
 var PKGCHARS = '[a-z+-=0-9\. \t~\*]'
 var APT_RE = new RegExp(
-    '^.*apt-get +(?:-.+?[ \t]+)*install +(?:-.+?[ \t]+)*(' + PKGCHARS + '+)' + 
+    '^.*apt-get +(?:-.+?[ \t]+)*install +(?:-.+?[ \t]+)*(' + PKGCHARS + '+)' +
     SHELLMETA + '?.*$')
 
 var args = process.argv.slice(2);
