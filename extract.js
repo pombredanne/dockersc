@@ -16,11 +16,10 @@ function extractRuns(parsedDockerFile) {
         return command.name === "RUN";
     }).map(function(command) {
         var args = command.args;
-        if (/^\s*\[.*\]\s*$/.test(args)) {
-            // FIXME: What to do with non-string items, like ["hello", 1, null]?
-            return JSON.parse(args);
+        if (typeof args === "string") {
+            return shellQuote.parse(args);
         }
-        return shellQuote.parse(args);
+        return args;
     });
 }
 
