@@ -5,6 +5,7 @@
     "extends": "eslint:recommended",
     "rules": {
         "no-console": "off",
+        "eqeqeq": "error",
         "guard-for-in": "error",
         "curly": "error",
         "indent": ["error", 4],
