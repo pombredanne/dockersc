@@ -31,13 +31,13 @@ var pojo = parse(dockerFile)
 var out = {'baseimage': pojo.from}
 out['bom-depends'] = []
 
-for(var cmd in pojo.run) {
-    if(pojo.run[cmd].search(APT_RE))
-	continue
-    var pkgs = pojo.run[cmd].replace(APT_RE, "\$1").trim().split(/\s+/)
+pojo.run.forEach(function(cmd) {
+    if(cmd.search(APT_RE))
+	return
+    var pkgs = cmd.replace(APT_RE, "\$1").trim().split(/\s+/)
     pkgs.forEach(function(pkg) {
 	out['bom-depends'].push(pkg.split(/=/)[0])
     })
-}
+})
 
 console.log(JSON.stringify(out))
