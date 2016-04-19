@@ -16,3 +16,11 @@ $ node docker-birthcert.js Dockerfile
 $ node docker-birthcert.js Dockerfile3
 {"baseimage":"ubuntu:14.04","bom-depends":["aufs-tools","automake","build-essential","curl","dpkg-sig","libcap-dev","libsqlite3-dev","mercurial","reprepro","ruby1.9.1","ruby1.9.1-dev","s3cmd"]}
 ```
+
+## Development
+
+### Lint
+
+```console
+$ npm run lint
+```

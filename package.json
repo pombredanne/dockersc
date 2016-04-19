@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "A proof of concept Dockerfile birthcert",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "npm run lint"
   },
   "bin": {
     "docker-birtcert": "./docker-birthcert.js"
@@ -20,5 +21,8 @@
   "dependencies": {
     "dockerfile-parse": "^0.1.1",
     "validate-dockerfile": "^1.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^2.8.0"
   }
 }
