@@ -1,15 +1,8 @@
 #!/usr/bin/env node
 
-var fs = require('fs')
-var parse = require('dockerfile-parse')
 var util = require('util')
-var validateDockerfile = require('validate-dockerfile')
-
-var SHELLMETA = '[<>&|;()`#]'
-var PKGCHARS = '[a-z+-=0-9\. \t~\*]'
-var APT_RE = new RegExp(
-    '^.*apt-get +(?:-.+?[ \t]+)*install +(?:-.+?[ \t]+)*(' + PKGCHARS + '+)' + 
-    SHELLMETA + '?.*$')
+    var fs = require('fs')
+var dockersc = require('./index.js')
 
 var args = process.argv.slice(2);
 if(!args.length) {
@@ -18,7 +11,11 @@ if(!args.length) {
 }
 
 var dockerFile = fs.readFileSync(args[0], 'utf8')
-var isValid = validateDockerfile(dockerFile)
+
+
+var retval = dockersc(dockerFile)
+var isValid = retval[0]
+var out = retval[1]
 
 if(!isValid.valid) {
     console.error("Dockerfile not valid:")
@@ -26,18 +23,5 @@ if(!isValid.valid) {
 	console.error(isValid.errors[msg].message)
     process.exit(1)
 }
-var pojo = parse(dockerFile)
-
-var out = {'baseimage': pojo.from}
-out['bom-depends'] = []
-
-pojo.run.forEach(function(cmd) {
-    if(cmd.search(APT_RE))
-	return
-    var pkgs = cmd.replace(APT_RE, "\$1").trim().split(/\s+/)
-    pkgs.forEach(function(pkg) {
-	out['bom-depends'].push(pkg.split(/=/)[0])
-    })
-})
 
 console.log(JSON.stringify(out))
