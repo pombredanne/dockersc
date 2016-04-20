@@ -1,4 +1,4 @@
-# dockersc
+# dockersc [![Circle CI](https://circleci.com/gh/softcert/dockersc.svg?style=shield)](https://circleci.com/gh/softcert/dockersc)
 
 A proof of concept Dockerfile birthcert. Uses [dockerfile-parse](https://www.npmjs.com/package/dockerfile-parse) and [validate-dockerfile](https://www.npmjs.com/package/validate-dockerfile).
 
