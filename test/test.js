@@ -31,3 +31,16 @@ tape('a valid Dockerfile with line escapes', function (t) {
   t.end()
   
 })
+
+tape('a simplistic Dockerfile with line escapes', function (t) {
+
+  var dockerFile = fs.readFileSync(__dirname + '/Dockerfile3', 'utf8')
+  var sc = dockersc(dockerFile)
+  var wanted = [ { valid: true }, 
+		 { baseimage: 'ubuntu:14.04', 'bom-depends': [ 'smbclient' ] } ]
+
+  t.deepEqual(sc, wanted)
+
+  t.end()
+  
+})

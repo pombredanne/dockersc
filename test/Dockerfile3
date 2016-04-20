@@ -1,0 +1,5 @@
+FROM ubuntu:14.04
+WORKDIR /
+RUN apt-get install -y smbclient
+WORKDIR /home
+CMD [bash]
