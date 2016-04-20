@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 var util = require('util')
     var fs = require('fs')
 var dockersc = require('./index.js')
@@ -24,4 +22,4 @@ if(!isValid.valid) {
     process.exit(1)
 }
 
-console.log(JSON.stringify(out))
+console.log(JSON.stringify(out, null, 2))

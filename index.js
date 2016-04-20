@@ -1,30 +1,57 @@
 module.exports = function(dockerFile){
-    var parse = require('dockerfile-parse')
     var validateDockerfile = require('validate-dockerfile')
-    
-    var SHELLMETA = '[<>&|;()`#]'
-    var PKGCHARS = '[a-z+-=0-9\. \t~\*]'
-    var APT_RE = new RegExp(
-	'^.*apt-get +(?:-.+?[ \t]+)*install +(?:-.+?[ \t]+)*(' + 
-	    PKGCHARS + '+)' + SHELLMETA + '?.*$')
+    var extract = require('./extract')
 
     var isValid = validateDockerfile(dockerFile)
     if(!isValid.valid)
 	return [isValid, {}]
 
-    var pojo = parse(dockerFile)
+    var parsed = extract(dockerFile)
 
-    var out = {'baseimage': pojo.from}
+    var out = {'baseimage': parsed.from}
     out['bom-depends'] = []
 
-    pojo.run.forEach(function(cmd) {
-	if(cmd.search(APT_RE))
-	    return
-	var pkgs = cmd.replace(APT_RE, "\$1").trim().split(/\s+/)
-	pkgs.forEach(function(pkg) {
-	    out['bom-depends'].push(pkg.split(/=/)[0])
-	})
-    })
+    function sliceRuns(runs) {
+	var objects = []
+	runs.forEach(function(cmds) {
+	    var indexes = []
+	    
+	    cmds.forEach(function(cmd, index) {
+		if(typeof cmd === "object") 
+		    if(cmd.op != 'glob')
+			indexes.push(index)
+	    })
+	    var previous = 0
+	    indexes.push(cmds.length)
+	    indexes.forEach(function(index) {
+		objects.push(cmds.slice(previous, index))
+		previous = index + 1
+	    })
 
+	})
+	return objects
+    }
+    
+    function removeOpts(cmd) {
+	cleaned = []
+	cmd.forEach(function(op) {
+	    if(typeof op === "object")
+		op = op.pattern.split(/=/)[0]
+	    if(op[0] != "-")
+		cleaned.push(op)
+	})
+	return cleaned
+    }
+
+    sliceRuns(parsed.runs).forEach(function(cmd) {
+	if(cmd[0] != 'apt-get')
+	    return
+	cmd = removeOpts(cmd.slice(1, cmd.length))
+	if(cmd[0] != 'install')
+	    return
+	out['bom-depends'].push.apply(out['bom-depends'], 
+				      cmd.slice(1, cmd.length))
+    })
+    
     return [isValid, out]
 }
