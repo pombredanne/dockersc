@@ -24,3 +24,9 @@ $ node docker-birthcert.js Dockerfile3
 ```console
 $ npm run lint
 ```
+
+### Test
+
+```console
+$ npm test
+```

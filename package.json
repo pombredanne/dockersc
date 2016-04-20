@@ -4,7 +4,7 @@
   "description": "A proof of concept Dockerfile birthcert",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint"
+    "test": "tape test/test.js"
   },
   "bin": {
     "docker-birtcert": "./docker-birthcert.js"
