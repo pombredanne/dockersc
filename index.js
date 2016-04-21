@@ -2,6 +2,8 @@ module.exports = function(dockerFile){
     var validateDockerfile = require("validate-dockerfile");
     var extract = require("./extract");
 
+    var PACKAGE_MANAGERS = ["apt-get", "yum", "apk", "dnf"];
+
     var isValid = validateDockerfile(dockerFile);
     if(!isValid.valid) {
         return [isValid, {}];
@@ -42,6 +44,7 @@ module.exports = function(dockerFile){
                 op = op.pattern.split(/=/)[0];
             }
             if(op[0] !== "-") {
+                op = op.split(/[<>]=/)[0];
                 cleaned.push(op);
             }
         });
@@ -49,15 +52,25 @@ module.exports = function(dockerFile){
     }
 
     sliceRuns(parsed.runs).forEach(function(cmd) {
-        if(cmd[0] !== "apt-get") {
+        var packman = cmd[0];
+        if(PACKAGE_MANAGERS.indexOf(packman) === -1) {
             return;
         }
         cmd = removeOpts(cmd.slice(1, cmd.length));
-        if(cmd[0] !== "install") {
+        if(packman === "apk") {
+            if(cmd[0] !== "add") {
+                return;
+            }
+        }
+        else if(cmd[0] !== "install") {
             return;
         }
-        out["bom-depends"].push.apply(out["bom-depends"], 
-                                      cmd.slice(1, cmd.length));
+        cmd.slice(1, cmd.length).forEach(function(pkg) {
+            if(out["bom-depends"].indexOf(pkg) === -1) {
+                out["bom-depends"].push(pkg);
+            }
+        });
+
     });
 
     return [isValid, out];
