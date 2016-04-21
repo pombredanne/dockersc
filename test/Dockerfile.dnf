@@ -2,9 +2,6 @@ FROM fedora:22
 
 MAINTAINER Christoph Görn <goern@b4mad.net>
 
-LABEL Vendor="#B4mad.Net" License=GPLv2
-LABEL Version=1.4.3
-
 ENV container docker
 
 RUN dnf install -y --setopt=tsflags=nodocs tar gcc-c++ rubygem-nokogiri rubygem-asciidoctor asciidoc fop docbook-xsl ditaa java-1.8.0-openjdk-devel ruby-devel zlib-devel google-noto-serif-fonts && \
